@@ -1,4 +1,5 @@
 import './scss/styles.scss';
+import { Buyer } from './components/models/Buyer';
 import { Cart } from './components/models/Cart';
 import { Catalog } from './components/models/Catalog';
 import { apiProducts } from './utils/data';
@@ -105,3 +106,47 @@ console.log('[Cart] Товар после удаления:', cart.hasItem(first
 
 cart.clear();
 logCart('После очистки:');
+
+const buyer = new Buyer();
+console.log('[Buyer] Начальные данные:', buyer.getData());
+console.log('[Buyer] Ошибки пустой модели:', buyer.validate());
+
+const buyerInput = { address: '  Тестовая улица, 7  ' };
+buyer.saveData(buyerInput);
+buyerInput.address = 'Внешняя правка входных данных';
+console.log('[Buyer] Адрес после правки входного объекта:', JSON.stringify(buyer.getData().address));
+
+buyer.saveData({ phone: '+1 202 555 0142' });
+console.log('[Buyer] Адрес и телефон после частичного сохранения:', buyer.getData());
+console.log('[Buyer] Ошибки при заполненных адресе и телефоне:', buyer.validate());
+
+buyer.saveData({ address: undefined });
+console.log('[Buyer] Адрес после явного undefined:', JSON.stringify(buyer.getData().address));
+
+const buyerOutput = buyer.getData();
+buyerOutput.address = 'Внешняя правка полученной копии';
+console.log('[Buyer] Адрес после правки полученной копии:', JSON.stringify(buyer.getData().address));
+
+buyer.saveData({ payment: 'card', email: 'buyer@example.test' });
+console.log('[Buyer] Полные данные с card:', buyer.getData());
+console.log('[Buyer] Ошибки при оплате card:', buyer.validate());
+console.log('[Buyer] Адрес после валидации:', JSON.stringify(buyer.getData().address));
+
+buyer.saveData({ payment: 'cash' });
+console.log('[Buyer] Оплата cash и ошибки:', buyer.getData().payment, buyer.validate());
+
+buyer.saveData({ address: '   ' });
+const buyerErrors = buyer.validate();
+console.log('[Buyer] Ошибка пробельного адреса:', { ...buyerErrors });
+console.log('[Buyer] Пробельный адрес после валидации:', JSON.stringify(buyer.getData().address));
+delete buyerErrors.address;
+const nextBuyerErrors = buyer.validate();
+console.log('[Buyer] Новый объект ошибок после внешней правки:', buyerErrors !== nextBuyerErrors, nextBuyerErrors);
+
+buyer.saveData({ address: '' });
+console.log('[Buyer] После явной очистки только адреса:', buyer.getData());
+
+buyer.saveData({ address: 'Тестовая улица, 7' });
+buyer.clear();
+console.log('[Buyer] После очистки всех полей:', buyer.getData());
+console.log('[Buyer] Ошибки после очистки:', buyer.validate());
