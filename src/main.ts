@@ -1,4 +1,7 @@
 import './scss/styles.scss';
+import { Api } from './components/base/Api';
+import { WebLarekApi } from './components/WebLarekApi';
+import { API_URL } from './utils/constants';
 import { Buyer } from './components/models/Buyer';
 import { Cart } from './components/models/Cart';
 import { Catalog } from './components/models/Catalog';
@@ -150,3 +153,14 @@ buyer.saveData({ address: 'Тестовая улица, 7' });
 buyer.clear();
 console.log('[Buyer] После очистки всех полей:', buyer.getData());
 console.log('[Buyer] Ошибки после очистки:', buyer.validate());
+
+const webLarekApi = new WebLarekApi(new Api(API_URL));
+
+webLarekApi.getCatalog()
+    .then((response) => {
+        catalog.setItems(response.items);
+        console.log('[API] Товары из модели каталога:', catalog.getItems());
+    })
+    .catch((error) => {
+        console.error('[API] Не удалось загрузить каталог:', error);
+    });
