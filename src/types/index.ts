@@ -22,3 +22,19 @@ export interface IBuyer {
     phone: string;
     address: string;
 }
+
+export interface ICatalogResponse {
+    total: number;
+    items: IProduct[];
+}
+
+export interface IOrderRequest extends Omit<IBuyer, 'payment'> {
+    payment: TPayment;
+    total: number;
+    items: IProduct['id'][];
+}
+
+export interface IOrderResponse {
+    id: string;
+    total: number;
+}
