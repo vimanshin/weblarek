@@ -5,23 +5,22 @@ export class Catalog {
     private selectedItem: IProduct | null = null;
 
     setItems(items: IProduct[]): void {
-        this.items = items.map((item) => ({ ...item }));
+        this.items = items;
     }
 
     getItems(): IProduct[] {
-        return this.items.map((item) => ({ ...item }));
+        return [...this.items];
     }
 
     getItemById(id: string): IProduct | undefined {
-        const item = this.items.find((product) => product.id === id);
-        return item ? { ...item } : undefined;
+        return this.items.find((product) => product.id === id);
     }
 
     setSelectedItem(item: IProduct): void {
-        this.selectedItem = { ...item };
+        this.selectedItem = item;
     }
 
     getSelectedItem(): IProduct | null {
-        return this.selectedItem ? { ...this.selectedItem } : null;
+        return this.selectedItem;
     }
 }

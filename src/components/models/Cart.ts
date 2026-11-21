@@ -4,7 +4,7 @@ export class Cart {
     private items: IProduct[] = [];
 
     getItems(): IProduct[] {
-        return this.items.map((item) => ({ ...item }));
+        return [...this.items];
     }
 
     hasItem(id: string): boolean {
@@ -12,19 +12,15 @@ export class Cart {
     }
 
     addItem(item: IProduct): void {
-        if (item.price === null || this.hasItem(item.id)) {
+        if (this.hasItem(item.id)) {
             return;
         }
 
-        this.items.push({ ...item });
+        this.items.push(item);
     }
 
-    removeItem(item: IProduct): void {
-        const index = this.items.findIndex((product) => product.id === item.id);
-
-        if (index !== -1) {
-            this.items.splice(index, 1);
-        }
+    removeItem(id: string): void {
+        this.items = this.items.filter((item) => item.id !== id);
     }
 
     clear(): void {

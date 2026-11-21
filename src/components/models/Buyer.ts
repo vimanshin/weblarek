@@ -1,12 +1,16 @@
-import type { IBuyer } from '../../types';
+import type { IBuyer, TBuyerErrors } from '../../types';
 
 export class Buyer {
-    private data: IBuyer = {
-        payment: '',
-        email: '',
-        phone: '',
-        address: '',
-    };
+    private data: IBuyer = this.createInitialData();
+
+    private createInitialData(): IBuyer {
+        return {
+            payment: null,
+            email: '',
+            phone: '',
+            address: '',
+        };
+    }
 
     saveData(data: Partial<IBuyer>): void {
         if (data.payment !== undefined) {
@@ -28,16 +32,11 @@ export class Buyer {
     }
 
     clear(): void {
-        this.data = {
-            payment: '',
-            email: '',
-            phone: '',
-            address: '',
-        };
+        this.data = this.createInitialData();
     }
 
-    validate(): Partial<Record<keyof IBuyer, string>> {
-        const errors: Partial<Record<keyof IBuyer, string>> = {};
+    validate(): TBuyerErrors {
+        const errors: TBuyerErrors = {};
         const { payment, email, phone, address } = this.data;
 
         if (payment !== 'card' && payment !== 'cash') {
